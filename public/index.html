@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#17233b">
+    <meta name="description" content="FlowDesk service request management dashboard">
+    <title>FlowDesk — Service Request Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+        <a class="brand" href="#" aria-label="FlowDesk home">
+          <span class="brand-mark"><span></span><span></span><span></span><span></span></span>
+          <span>flow<span>desk</span></span>
+        </a>
+        <div class="workspace-label">WORKSPACE</div>
+        <nav class="nav-list">
+          <a class="nav-item active" href="#dashboard" data-view="dashboard" aria-current="page"><span class="nav-icon">◫</span>Dashboard</a>
+          <a class="nav-item" href="#requests" data-view="requests"><span class="nav-icon">▤</span>All requests<span class="nav-count" id="sidebar-count">7</span></a>
+          <a class="nav-item" href="#archives" data-view="archives"><span class="nav-icon">▣</span>Archives<span class="nav-count" id="archive-count">0</span></a>
+          <button class="nav-item" id="sidebar-new"><span class="nav-icon plus-icon">＋</span>New request</button>
+          <a class="nav-item" href="#team" data-view="team"><span class="nav-icon">♙</span>Team members</a>
+        </nav>
+        <div class="workspace-label tools-label">PREFERENCES</div>
+        <nav class="nav-list">
+          <a class="nav-item" href="#settings" data-view="settings"><span class="nav-icon">⚙</span>Settings</a>
+          <a class="nav-item" href="#help" data-view="help"><span class="nav-icon">◉</span>Help center</a>
+        </nav>
+      </aside>
+
+      <main class="main-area" id="dashboard">
+        <header class="topbar">
+          <button class="mobile-menu" id="mobile-menu" aria-label="Open navigation" aria-expanded="false">☰</button>
+          <div class="breadcrumbs"><span>Workspace</span><span class="crumb-slash">/</span><strong id="current-view">Dashboard</strong></div>
+          <div class="topbar-actions">
+            <button class="icon-button help-button" data-view="help" aria-label="Help center">?</button>
+            <button class="icon-button notification-button" aria-label="Notifications">♧<i></i></button>
+          </div>
+        </header>
+
+        <div class="content">
+          <section class="welcome-row" id="dashboard-overview">
+            <div>
+              <div class="eyebrow"><span></span> OPERATIONS OVERVIEW</div>
+              <h1>Service Request Management</h1>
+              <p class="subtitle">Everything your team needs, moving forward.</p>
+            </div>
+            <button class="primary-button" id="new-request"><span>＋</span> New request</button>
+          </section>
+
+          <section class="summary-grid" id="summary-grid" aria-label="Request totals">
+            <article class="summary-card total-card">
+              <div class="summary-top"><span>Total requests</span><span class="summary-icon icon-total">▤</span></div>
+              <div class="summary-bottom"><strong id="total-count">0</strong><span class="summary-note">Across all requests</span></div>
+            </article>
+            <article class="summary-card pending-card">
+              <div class="summary-top"><span>Pending tasks</span><span class="summary-icon icon-pending">◷</span></div>
+              <div class="summary-bottom"><strong id="pending-count">0</strong><span class="summary-note"><i class="status-dot pending-dot"></i>Awaiting action</span></div>
+            </article>
+            <article class="summary-card progress-card">
+              <div class="summary-top"><span>In progress</span><span class="summary-icon icon-progress">↗</span></div>
+              <div class="summary-bottom"><strong id="progress-count">0</strong><span class="summary-note"><i class="status-dot progress-dot"></i>Being worked on</span></div>
+            </article>
+            <article class="summary-card finished-card">
+              <div class="summary-top"><span>Finished tasks</span><span class="summary-icon icon-finished">✓</span></div>
+              <div class="summary-bottom"><strong id="finished-count">0</strong><span class="summary-note"><i class="status-dot finished-dot"></i>Resolved or closed</span></div>
+            </article>
+          </section>
+
+          <section class="board-section" id="board">
+            <div class="board-heading">
+              <div><h2><span id="board-title">Request board</span> <span class="board-total" id="board-total">0 requests</span></h2><p id="board-description">Track and manage your team's service requests.</p></div>
+              <button class="view-toggle" aria-label="Board view selected"><span>▦</span> Board <span class="chevron">⌄</span></button>
+            </div>
+            <div class="toolbar">
+              <label class="search-box"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search requests..." autocomplete="off"><kbd>/</kbd></label>
+              <div class="filter-controls">
+                <label class="select-wrap"><span class="sr-only">Filter by status</span><select id="status-filter"><option value="">All statuses</option><option value="open">Pending</option><option value="in progress">In progress</option><option value="resolved">Resolved</option><option value="closed">Closed</option></select></label>
+                <label class="select-wrap"><span class="sr-only">Filter by priority</span><select id="priority-filter"><option value="">All priorities</option><option value="urgent">Urgent</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select></label>
+                <span class="toolbar-divider"></span>
+                <button class="refresh-button" id="refresh" aria-label="Refresh requests" title="Refresh">↻</button>
+              </div>
+            </div>
+            <div class="board-grid" id="board-columns">
+              <section class="board-column pending-column" data-column="pending" aria-labelledby="pending-heading">
+                <div class="column-heading"><div><span class="column-dot pending-dot"></span><h3 id="pending-heading">Pending tasks</h3><span class="column-count" id="pending-column-count">0</span></div><button class="column-menu" aria-label="Pending tasks options">···</button></div>
+                <div class="column-cards" id="pending-cards"></div>
+                <button class="add-card" data-add-status="open"><span>＋</span> Add a request</button>
+              </section>
+              <section class="board-column progress-column" data-column="progress" aria-labelledby="progress-heading">
+                <div class="column-heading"><div><span class="column-dot progress-dot"></span><h3 id="progress-heading">In progress</h3><span class="column-count" id="progress-column-count">0</span></div><button class="column-menu" aria-label="In progress options">···</button></div>
+                <div class="column-cards" id="progress-cards"></div>
+                <button class="add-card" data-add-status="in progress"><span>＋</span> Add a request</button>
+              </section>
+              <section class="board-column finished-column" data-column="finished" aria-labelledby="finished-heading">
+                <div class="column-heading"><div><span class="column-dot finished-dot"></span><h3 id="finished-heading">Finished tasks</h3><span class="column-count" id="finished-column-count">0</span></div><button class="column-menu" aria-label="Finished tasks options">···</button></div>
+                <div class="column-cards" id="finished-cards"></div>
+                <button class="add-card" data-add-status="resolved"><span>＋</span> Add a request</button>
+              </section>
+            </div>
+            <p class="empty-board" id="empty-board" hidden>No requests match your filters. Try another search or create a request.</p>
+          </section>
+          <section class="archive-section" id="archives-view" hidden aria-labelledby="archives-title">
+            <div class="archive-heading">
+              <div><h1 id="archives-title">Archived requests <span class="board-total" id="archive-total">0 requests</span></h1><p class="subtitle">Deleted requests are kept here and can be restored at any time.</p></div>
+            </div>
+            <div class="archive-grid" id="archived-requests"></div>
+            <p class="archive-empty" id="archive-empty" hidden>No deleted requests in the archive.</p>
+          </section>
+          <section class="team-section" id="team-view" hidden aria-labelledby="team-title">
+            <div class="team-heading">
+              <div><h1 id="team-title">Team members</h1><p class="subtitle">People assigned to service requests in your workspace.</p></div>
+              <span class="team-total" id="team-total">0 members</span>
+            </div>
+            <div class="team-grid" id="team-members"></div>
+            <p class="team-empty" id="team-empty" hidden>No team members are assigned to requests yet.</p>
+          </section>
+          <section class="settings-section" id="settings-view" hidden aria-labelledby="settings-title">
+            <div class="settings-heading">
+              <div><h1 id="settings-title">Settings</h1><p class="subtitle">Choose how new service requests are started in this workspace.</p></div>
+            </div>
+            <form class="settings-card" id="settings-form">
+              <div class="settings-copy">
+                <h2>Request defaults</h2>
+                <p>Set the status used when creating a request from the dashboard or navigation.</p>
+              </div>
+              <label class="settings-field" for="setting-default-status">Default request status
+                <select id="setting-default-status" name="defaultStatus">
+                  <option value="open">Pending</option>
+                  <option value="in progress">In progress</option>
+                  <option value="resolved">Resolved</option>
+                  <option value="closed">Closed</option>
+                </select>
+              </label>
+              <label class="settings-field" for="setting-api-url">FlowDesk API server URL
+                <input id="setting-api-url" name="apiUrl" type="url" placeholder="Leave blank to use this site">
+                <span class="settings-help">For Live Server, enter the address running FlowDesk, such as http://localhost:3000.</span>
+              </label>
+              <div class="settings-actions"><span>Saved in this browser.</span><button class="primary-button" type="submit">Save settings</button></div>
+            </form>
+          </section>
+          <section class="help-section" id="help-view" hidden aria-labelledby="help-title">
+            <div class="help-heading">
+              <div><h1 id="help-title">Help center</h1><p class="subtitle">Quick answers to help you manage service requests in FlowDesk.</p></div>
+            </div>
+            <div class="help-grid">
+              <article class="help-card">
+                <span class="help-card-icon" aria-hidden="true">▤</span>
+                <h2>Managing requests</h2>
+                <p>Search, filter, create, edit, or remove requests from your board.</p>
+                <a href="#requests" data-view="requests">Go to all requests <span aria-hidden="true">→</span></a>
+              </article>
+              <article class="help-card">
+                <span class="help-card-icon" aria-hidden="true">♙</span>
+                <h2>Team assignments</h2>
+                <p>Assign a teammate in a request’s details to track their active work.</p>
+                <a href="#team" data-view="team">View team members <span aria-hidden="true">→</span></a>
+              </article>
+            </div>
+            <div class="help-faq">
+              <h2>Frequently asked questions</h2>
+              <details>
+                <summary>How do I create a request?</summary>
+                <p>Select <strong>New request</strong>, complete the required details, then choose <strong>Create request</strong>.</p>
+              </details>
+              <details>
+                <summary>How do I change a request’s status or assignee?</summary>
+                <p>Open the request’s action menu, select <strong>Edit request</strong>, update its status or assignee, and save your changes.</p>
+              </details>
+              <details>
+                <summary>Can I restore a deleted request?</summary>
+                <p>Yes. Deleting a request moves it to <strong>Archives</strong>. Open Archives and select <strong>Restore request</strong> to put it back on the request board.</p>
+              </details>
+              <details>
+                <summary>Where are my requests and settings stored?</summary>
+                <p>Requests and archived items are stored by the FlowDesk server and reset when its in-memory store restarts. Your default request status is saved in this browser.</p>
+              </details>
+            </div>
+          </section>
+          <footer class="page-footer"><span>FlowDesk <span class="footer-dot">·</span> Service operations, in sync.</span><span>All changes saved <i class="saved-dot"></i></span></footer>
+        </div>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <dialog class="request-dialog" id="request-dialog" aria-labelledby="dialog-title">
+      <form id="request-form">
+        <div class="dialog-header"><div><span class="eyebrow">REQUEST DETAILS</span><h2 id="dialog-title">New request</h2></div><button type="button" class="dialog-close" id="close-dialog" aria-label="Close dialog">×</button></div>
+        <input type="hidden" id="request-id">
+        <div class="form-grid">
+          <label class="form-field full-field">Request title<input id="field-title" name="title" required maxlength="120" placeholder="e.g. Laptop replacement"></label>
+          <label class="form-field">Category<select id="field-category" name="category" required><option value="">Select a category</option><option>Facilities</option><option>IT Support</option><option>Security</option><option>Maintenance</option><option>Other</option></select></label>
+          <label class="form-field">Priority<select id="field-priority" name="priority" required><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option><option value="urgent">Urgent</option></select></label>
+          <label class="form-field">Requester<input id="field-requester" name="requester" required maxlength="80" placeholder="Full name"></label>
+          <label class="form-field">Requester email<input id="field-email" name="requesterEmail" type="email" placeholder="name@company.com"></label>
+          <label class="form-field">Assignee<input id="field-assignee" name="assignee" maxlength="80" placeholder="Unassigned"></label>
+          <label class="form-field">Status<select id="field-status" name="status" required><option value="open">Pending</option><option value="in progress">In progress</option><option value="resolved">Resolved</option><option value="closed">Closed</option></select></label>
+          <label class="form-field full-field">Description<textarea id="field-description" name="description" required maxlength="1000" rows="3" placeholder="Add a few details about this request..."></textarea></label>
+        </div>
+        <div class="dialog-error" id="form-error" role="alert"></div>
+        <div class="dialog-footer"><button type="button" class="secondary-button" id="cancel-dialog">Cancel</button><button type="submit" class="primary-button"><span>＋</span><span id="submit-label">Create request</span></button></div>
+      </form>
+    </dialog>
+    <script src="./app.js" defer></script>
+  </body>
+</html>
